@@ -20,7 +20,20 @@ POST https://thorbit.ai/api/v1/mcp/thorbit/{toolName}
 
 Authentication uses a Thorbit API key. Keep the key in `THORBIT_API_KEY`; never commit it to source.
 
-## Node.js
+> **Registry status:** this public repository is usable source today. The `thorbit-sdk` and
+> `thorbit-cli` npm packages and the `thorbit-sdk` PyPI package are release-ready names, but they
+> have not been published yet. The registry commands below become active with that separate release.
+
+## Use from source today
+
+```bash
+git clone https://github.com/VilovietaSEO/thorbit-sdk.git
+cd thorbit-sdk
+npm install
+npm run verify
+```
+
+## Node.js (after npm publication)
 
 ```bash
 npm install thorbit-sdk
@@ -39,7 +52,7 @@ console.log(balance.result);
 
 See [the Node SDK README](packages/thorbit-sdk-node/README.md).
 
-## Python
+## Python (after PyPI publication)
 
 ```bash
 python -m pip install thorbit-sdk
@@ -57,7 +70,7 @@ with GeneratedCallThorbitTools({"api_key": os.environ["THORBIT_API_KEY"]}) as th
 
 See [the Python SDK README](packages/thorbit-sdk-python/README.md).
 
-## CLI
+## CLI (after npm publication)
 
 ```bash
 npm install --global thorbit-cli
