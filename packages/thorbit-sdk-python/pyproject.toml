@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "thorbit-sdk"
+version = "0.1.0"
+description = "Typed Python client for the Thorbit API"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.11"
+dependencies = [
+    "httpx>=0.27,<1",
+    "pydantic>=2.8,<3",
+]
+
+[project.urls]
+Homepage = "https://thorbit.ai"
+Repository = "https://github.com/VilovietaSEO/thorbit-sdk"
+Issues = "https://github.com/VilovietaSEO/thorbit-sdk/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]

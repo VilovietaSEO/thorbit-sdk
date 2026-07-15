@@ -1,0 +1,28 @@
+{
+  "name": "thorbit-sdk-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Public source workspace for the Thorbit Node SDK, Python SDK, CLI, cURL guide, and tool contracts",
+  "license": "MIT",
+  "workspaces": [
+    "packages/thorbit-sdk-node",
+    "packages/thorbit-cli"
+  ],
+  "scripts": {
+    "build": "npm run build:sdk && npm run build:cli",
+    "build:sdk": "npm run build --workspace=thorbit-sdk",
+    "build:cli": "npm run build --workspace=thorbit-cli",
+    "typecheck": "npm run typecheck --workspace=thorbit-sdk && npm run build:sdk && npm run typecheck --workspace=thorbit-cli",
+    "test": "npm run test:node && npm run test:python",
+    "test:node": "npm run test --workspace=thorbit-sdk",
+    "test:python": "PYTHONPATH=packages/thorbit-sdk-python/src python3 -m unittest discover -s packages/thorbit-sdk-python/tests -p 'test_*.py'",
+    "verify": "npm run typecheck && npm test && npm run build"
+  },
+  "engines": {
+    "node": ">=20",
+    "npm": ">=10"
+  },
+  "overrides": {
+    "esbuild": "0.28.1"
+  }
+}
