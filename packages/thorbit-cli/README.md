@@ -2,7 +2,10 @@
 
 Generated command-line interface for all 79 tools in the unified Thorbit API.
 
-## Install
+## Registry install (after publication)
+
+The npm package is not published yet. Clone the public repository and use the
+Development commands below today.
 
 ```bash
 npm install --global thorbit-cli

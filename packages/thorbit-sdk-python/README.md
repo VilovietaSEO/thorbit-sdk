@@ -2,7 +2,10 @@
 
 Typed Python client for the unified Thorbit API. Generated Pydantic models and methods cover all 79 Thorbit tools.
 
-## Install
+## Registry install (after publication)
+
+The PyPI package is not published yet. Clone the public repository and use the
+Development commands below today.
 
 ```bash
 python -m pip install thorbit-sdk
