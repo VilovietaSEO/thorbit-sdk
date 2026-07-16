@@ -1,8 +1,8 @@
 {
   "contractVersion": 1,
-  "generatedAt": "2026-07-14T23:22:11.641Z",
+  "generatedAt": "2026-07-16T00:57:50.297Z",
   "serverName": "thorbit-mcp",
-  "serverVersion": "0.2.0",
+  "serverVersion": "0.3.0",
   "productIds": [
     "account",
     "content",
@@ -3017,11 +3017,11 @@
               "limits": {
                 "type": "object",
                 "description": "Named metrics with a maximum serialized size of 500000 bytes.",
-                "additionalProperties": {
-                  "type": "string",
+                "propertyNames": {
                   "minLength": 1,
                   "maxLength": 80
-                }
+                },
+                "additionalProperties": true
               },
               "usage": {
                 "$ref": "#/properties/result/properties/limits"

@@ -1,6 +1,8 @@
 import { realpathSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
+import packageManifest from "../package.json";
+
 import { Command, CommanderError } from "commander";
 import {
   CallThorbitTools,
@@ -27,6 +29,7 @@ import {
 
 const THORBIT_DEFAULT_BASE_URL = "https://thorbit.ai";
 const THORBIT_DEFAULT_TIMEOUT_MS = 120_000;
+export const THORBIT_CLI_VERSION = packageManifest.version;
 
 interface ThorbitCliToolRuntime {
   readonly name: ThorbitGeneratedToolName;
@@ -282,7 +285,7 @@ export function createThorbitCliProgram(context: ThorbitCliContext): Command {
     .description(
       `Generated CLI for all ${THORBIT_GENERATED_COMMANDS.length} Thorbit MCP tools`,
     )
-    .version("0.1.0")
+    .version(THORBIT_CLI_VERSION)
     .configureHelp({ showGlobalOptions: true })
     .showHelpAfterError()
     .exitOverride()
