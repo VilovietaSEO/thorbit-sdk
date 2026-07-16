@@ -1,6 +1,6 @@
 {
   "name": "thorbit-sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Typed Node.js client for the Thorbit API",
   "license": "MIT",
   "homepage": "https://github.com/VilovietaSEO/thorbit-sdk#readme",
@@ -29,6 +29,9 @@
     "README.md",
     "LICENSE"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit",

@@ -19,9 +19,4 @@ export type {
   ThorbitClientOptionsInput,
 } from './thorbit-client-schema'
 
-export {
-  THORBIT_GENERATED_TOOLS,
-  ThorbitGeneratedToolNameSchema,
-  ThorbitJsonValueSchema,
-} from './generated-thorbit-tools'
-export type * from './generated-thorbit-tools'
+export * from './generated-thorbit-tools'

@@ -1,6 +1,6 @@
 {
   "name": "thorbit-cli",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Generated command-line client for every Thorbit tool",
   "license": "MIT",
   "homepage": "https://github.com/VilovietaSEO/thorbit-sdk#readme",
@@ -15,21 +15,24 @@
   "type": "module",
   "sideEffects": false,
   "bin": {
-    "thorbit": "./dist/index.js"
+    "thorbit": "dist/index.js"
   },
   "files": [
     "dist",
     "README.md",
     "LICENSE"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsup && node --input-type=module --eval \"import { chmodSync } from 'node:fs'; chmodSync('dist/index.js', 0o755)\"",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run --config vitest.config.ts"
   },
   "dependencies": {
     "commander": "^14.0.2",
-    "thorbit-sdk": "^0.1.0",
+    "thorbit-sdk": "0.1.1",
     "zod": "^3.23.0"
   },
   "devDependencies": {

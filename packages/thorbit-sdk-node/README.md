@@ -2,10 +2,7 @@
 
 Typed Node.js client for the unified Thorbit API. The generated surface includes one method, input schema, output schema, and TypeScript type set for each of the 79 Thorbit tools.
 
-## Registry install (after publication)
-
-The npm package is not published yet. Clone the public repository and use the
-Development commands below today.
+## Install
 
 ```bash
 npm install thorbit-sdk

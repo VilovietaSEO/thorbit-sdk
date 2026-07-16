@@ -20,11 +20,10 @@ POST https://thorbit.ai/api/v1/mcp/thorbit/{toolName}
 
 Authentication uses a Thorbit API key. Keep the key in `THORBIT_API_KEY`; never commit it to source.
 
-> **Registry status:** this public repository is usable source today. The `thorbit-sdk` and
-> `thorbit-cli` npm packages and the `thorbit-sdk` PyPI package are release-ready names, but they
-> have not been published yet. The registry commands below become active with that separate release.
+> **Registry status:** the `thorbit-sdk` Node.js package and `thorbit-cli` are published on npm.
+> The Python SDK remains available from this repository while its first PyPI release is prepared.
 
-## Use from source today
+## Use from source
 
 ```bash
 git clone https://github.com/VilovietaSEO/thorbit-sdk.git
@@ -33,7 +32,7 @@ npm install
 npm run verify
 ```
 
-## Node.js (after npm publication)
+## Node.js
 
 ```bash
 npm install thorbit-sdk
@@ -70,7 +69,7 @@ with GeneratedCallThorbitTools({"api_key": os.environ["THORBIT_API_KEY"]}) as th
 
 See [the Python SDK README](packages/thorbit-sdk-python/README.md).
 
-## CLI (after npm publication)
+## CLI
 
 ```bash
 npm install --global thorbit-cli
@@ -93,6 +92,7 @@ Requirements:
 - Node.js 20 or newer
 - npm 10 or newer
 - Python 3.11 or newer
+- `uv` for the isolated Python verification environment
 
 ```bash
 npm install
@@ -103,7 +103,7 @@ npm run verify
 
 ## Package publication
 
-This repository is the public source distribution. Publishing `thorbit-sdk` or `thorbit-cli` to npm and `thorbit-sdk` to PyPI is a separate release operation.
+This repository is the public source distribution for the npm releases. Python releases use the credential-free `publish-python.yml` GitHub Actions workflow with PyPI trusted publishing; the first PyPI publication is still pending account-side publisher approval.
 
 ## License
 

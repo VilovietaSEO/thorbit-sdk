@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { z } from 'zod'
 
 import { SendThorbitHttpToolCall } from '../src/SendThorbitHttpToolCall'
+import { THORBIT_ACCOUNT_BILLING_GET_PLAN_OUTPUT_SCHEMA } from '../src/index'
 
 const outputSchema = z
   .object({
@@ -47,5 +48,40 @@ describe('SendThorbitHttpToolCall', () => {
         }),
       }),
     )
+  })
+})
+
+describe('generated Account billing schema', () => {
+  const output = {
+    ok: true,
+    toolName: 'thorbit_account_billing_get_plan',
+    requestId: 'request_billing_1',
+    result: {
+      planId: 'growth',
+      planName: 'Growth',
+      status: 'active',
+      renewsAt: null,
+      limits: { projects: 25 },
+      usage: { projects: 4 },
+    },
+    next: [],
+  }
+
+  it('enforces JSON Schema propertyNames constraints', () => {
+    expect(
+      THORBIT_ACCOUNT_BILLING_GET_PLAN_OUTPUT_SCHEMA.safeParse(output).success,
+    ).toBe(true)
+    expect(
+      THORBIT_ACCOUNT_BILLING_GET_PLAN_OUTPUT_SCHEMA.safeParse({
+        ...output,
+        result: { ...output.result, limits: { '': 25 } },
+      }).success,
+    ).toBe(false)
+    expect(
+      THORBIT_ACCOUNT_BILLING_GET_PLAN_OUTPUT_SCHEMA.safeParse({
+        ...output,
+        result: { ...output.result, usage: { ['x'.repeat(81)]: 4 } },
+      }).success,
+    ).toBe(false)
   })
 })
