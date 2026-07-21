@@ -1,6 +1,6 @@
 {
   "name": "thorbit-sdk-workspace",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Public source workspace for the Thorbit Node SDK, Python SDK, CLI, cURL guide, and tool contracts",
   "license": "MIT",

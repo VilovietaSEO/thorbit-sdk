@@ -2,10 +2,7 @@
 
 Typed Python client for the unified Thorbit API. Generated Pydantic models and methods cover all 79 Thorbit tools.
 
-## Registry install (after publication)
-
-The PyPI package is not published yet. Clone the public repository and use the
-Development commands below today.
+## Install
 
 ```bash
 python -m pip install thorbit-sdk
@@ -27,29 +24,9 @@ with GeneratedCallThorbitTools(
     print(response.result)
 ```
 
-The lower-level `CallThorbitTools.call_tool` method accepts a tool name, an input mapping, and a Pydantic-compatible result model for dynamic integrations.
+The lower-level `CallThorbitTools.call_tool` method supports dynamic integrations. Catch the exported stable exception classes for validation, HTTP, timeout, response, and transport failures.
 
-## Authentication
-
-Pass the API key as `api_key`. The options model stores it as `SecretStr`, sends it only to the configured Thorbit base URL, and rejects credentials embedded in URLs.
-
-## Errors
-
-Catch the exported stable exception classes:
-
-- `ThorbitRequestValidationError`
-- `ThorbitHttpError`
-- `ThorbitResponseValidationError`
-- `ThorbitResultModelError`
-- `ThorbitTimeoutError`
-- `ThorbitTransportError`
-
-## Development
-
-```bash
-python -m pip install -e .
-PYTHONPATH=src python -m unittest discover -s tests -p 'test_*.py'
-```
+Source and the generated contract are public at [VilovietaSEO/thorbit-sdk](https://github.com/VilovietaSEO/thorbit-sdk).
 
 ## License
 

@@ -2097,7 +2097,7 @@ export const THORBIT_GENERATED_COMMANDS = [
     "toolName": "thorbit_money_kw_start",
     "productId": "money-kw",
     "title": "Start Money Keyword Run",
-    "description": "Start a durable compact-keyword research run for one or more company/offer names — Mastra runtime, OpenRouter MiniMax 3, MCP Scraper evidence. companyNames is required; rootEntity, centralIntent, competitors, and seedTopics steer the research. Returns a runPublicId plus a thorbit_money_kw_get poll target — the tiered list is not returned inline; call thorbit_money_kw_get_targets once complete. Metered.",
+    "description": "Start a durable native-Mastra compact-keyword research run for one or more company/offer names — OpenRouter MiniMax 3 and MCP Scraper evidence. companyNames is required; websiteUrl, rootEntity, centralIntent, competitors, and seedTopics steer the research. Use idempotencyKey to retry safely. Returns a Phoenix-owned runPublicId plus a thorbit_money_kw_get poll target — the tiered list is not returned inline; call thorbit_money_kw_get_targets once complete. Metered.",
     "requiredInputFields": [
       "companyNames"
     ],
@@ -2109,6 +2109,9 @@ export const THORBIT_GENERATED_COMMANDS = [
       "companyNames": {
         "minItems": 1,
         "maxItems": 20
+      },
+      "websiteUrl": {
+        "maxLength": 2048
       },
       "rootEntity": {
         "minLength": 1,
@@ -2123,6 +2126,10 @@ export const THORBIT_GENERATED_COMMANDS = [
       },
       "seedTopics": {
         "maxItems": 25
+      },
+      "idempotencyKey": {
+        "minLength": 1,
+        "maxLength": 160
       }
     },
     "requiredScopes": [
@@ -2670,7 +2677,7 @@ export const THORBIT_GENERATED_COMMANDS = [
       "competitors": [],
       "maxCompetitors": 5,
       "maxTargetUrls": 75,
-      "maxCompetitorUrls": 35,
+      "maxCompetitorUrls": 500,
       "maxSerpQueries": 12,
       "serpConcurrency": 50
     },
@@ -2717,7 +2724,7 @@ export const THORBIT_GENERATED_COMMANDS = [
       },
       "maxCompetitorUrls": {
         "minimum": 1,
-        "maximum": 100
+        "maximum": 500
       },
       "maxSerpQueries": {
         "minimum": 1,

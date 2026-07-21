@@ -8,8 +8,6 @@ Generated command-line interface for all 79 tools in the unified Thorbit API.
 npm install --global thorbit-cli
 ```
 
-Node.js 20 or newer is required.
-
 ## Use
 
 ```bash
@@ -20,24 +18,28 @@ thorbit thorbit-account-projects-list \
   --output json
 ```
 
-Use `thorbit --help` to list every command. Each command's help includes its exact MCP tool name, required fields, defaults, caps, scopes, cost, side effects, result mode, and suggested next tools.
+Use `thorbit --help` to list every command. Each command documents its exact MCP tool name, required fields, defaults, caps, scopes, cost, side effects, result mode, and suggested next tools.
 
-Global options include:
+Source and the generated contract are public at [VilovietaSEO/thorbit-sdk](https://github.com/VilovietaSEO/thorbit-sdk).
 
-- `--api-key <key>` or `THORBIT_API_KEY`
-- `--base-url <url>`
-- `--timeout-ms <milliseconds>`
-- `--output json|text`
+## Private admin CLI
 
-## Development
-
-From the repository root:
+Thorbit operators create a personal CLI key in **Admin → Team access → Personal
+CLI access**. Admin credentials are separate from customer API keys and keep the
+operator's current Phoenix roles and permissions.
 
 ```bash
-npm install
-npm run typecheck --workspace=thorbit-cli
-npm run build --workspace=thorbit-cli
+export THORBIT_ADMIN_API_KEY="thbt_op_..."
+
+thorbit admin whoami --output json
+thorbit admin request GET users/list/pii \
+  --query-json '{"search":"person@example.com","limit":25}' \
+  --output json
 ```
+
+Mutations use the same confirmation fields, policies, permission checks, and
+audit behavior as the web admin. The generic command refuses paths outside
+`/api/admin`.
 
 ## License
 

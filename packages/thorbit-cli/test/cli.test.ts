@@ -119,4 +119,93 @@ describe('runThorbitCli', () => {
     expect(stderr.join('')).toContain('[REDACTED]')
     expect(stderr.join('')).not.toContain('secret-key')
   })
+
+  it('calls the private admin capability root with a personal operator key', async () => {
+    const stdout: string[] = []
+    const requests: Array<{ url: string; authorization: string | null }> = []
+    const exitCode = await runThorbitCli({
+      argv: ['node', 'thorbit', 'admin', 'whoami', '--output', 'json'],
+      env: { THORBIT_ADMIN_API_KEY: 'thbt_op_abc123def456_test-secret-value-1234567890' },
+      fetch: async (input, init) => {
+        requests.push({
+          url: String(input),
+          authorization: new Headers(init?.headers).get('authorization'),
+        })
+        return Response.json({
+          operator: {
+            displayName: 'Admin User',
+            roles: ['administrator'],
+          },
+          capabilities: ['manage_operators'],
+        })
+      },
+      stdout: (text) => stdout.push(text),
+      stderr: () => undefined,
+    })
+
+    expect(exitCode).toBe(0)
+    expect(requests).toEqual([
+      {
+        url: 'https://thorbit.ai/api/admin',
+        authorization:
+          'Bearer thbt_op_abc123def456_test-secret-value-1234567890',
+      },
+    ])
+    expect(JSON.parse(stdout.join(''))).toMatchObject({
+      operator: { roles: ['administrator'] },
+    })
+  })
+
+  it('passes structured query input to an exact admin path', async () => {
+    let requestedUrl = ''
+    const exitCode = await runThorbitCli({
+      argv: [
+        'node',
+        'thorbit',
+        'admin',
+        'request',
+        'GET',
+        'users/list/pii',
+        '--query-json',
+        '{"search":"brian@example.com","limit":25}',
+        '--output',
+        'json',
+      ],
+      env: { THORBIT_ADMIN_API_KEY: 'operator-key' },
+      fetch: async (input) => {
+        requestedUrl = String(input)
+        return Response.json({ page: { items: [] } })
+      },
+      stdout: () => undefined,
+      stderr: () => undefined,
+    })
+
+    expect(exitCode).toBe(0)
+    expect(requestedUrl).toBe(
+      'https://thorbit.ai/api/admin/users/list/pii?search=brian%40example.com&limit=25',
+    )
+  })
+
+  it('refuses admin requests outside the private admin route', async () => {
+    const stderr: string[] = []
+    const exitCode = await runThorbitCli({
+      argv: [
+        'node',
+        'thorbit',
+        'admin',
+        'request',
+        'GET',
+        'https://example.com/secrets',
+      ],
+      env: { THORBIT_ADMIN_API_KEY: 'operator-key' },
+      fetch: async () => {
+        throw new Error('fetch must not run')
+      },
+      stdout: () => undefined,
+      stderr: (text) => stderr.push(text),
+    })
+
+    expect(exitCode).toBe(1)
+    expect(stderr.join('')).toContain('limited to /api/admin')
+  })
 })

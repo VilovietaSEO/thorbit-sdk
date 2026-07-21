@@ -1,6 +1,6 @@
 {
   "name": "thorbit-sdk",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Typed Node.js client for the Thorbit API",
   "license": "MIT",
   "homepage": "https://github.com/VilovietaSEO/thorbit-sdk#readme",

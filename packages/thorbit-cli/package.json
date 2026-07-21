@@ -1,6 +1,6 @@
 {
   "name": "thorbit-cli",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Generated command-line client for every Thorbit tool",
   "license": "MIT",
   "homepage": "https://github.com/VilovietaSEO/thorbit-sdk#readme",
@@ -19,6 +19,7 @@
   },
   "files": [
     "dist",
+    "skills",
     "README.md",
     "LICENSE"
   ],
@@ -32,7 +33,7 @@
   },
   "dependencies": {
     "commander": "^14.0.2",
-    "thorbit-sdk": "0.1.1",
+    "thorbit-sdk": "0.2.0",
     "zod": "^3.23.0"
   },
   "devDependencies": {
