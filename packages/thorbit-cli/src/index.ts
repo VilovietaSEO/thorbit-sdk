@@ -108,6 +108,7 @@ export async function call(
 interface ThorbitCliOptionValues {
   readonly inputJson: string;
   readonly apiKey?: string;
+  readonly adminApiKey?: string;
   readonly baseUrl: string;
   readonly timeoutMs: number;
   readonly output: string;
@@ -116,14 +117,137 @@ interface ThorbitCliOptionValues {
 export interface RunThorbitCliDependencies extends CallThorbitCliDependencies {
   readonly argv?: readonly string[];
   readonly env?: Readonly<Record<string, string | undefined>>;
+  readonly fetch?: typeof fetch;
   readonly stdout?: (text: string) => void;
   readonly stderr?: (text: string) => void;
 }
 
 interface ThorbitCliContext extends CallThorbitCliDependencies {
   readonly env: Readonly<Record<string, string | undefined>>;
+  readonly fetch: typeof fetch;
   readonly stdout: (text: string) => void;
   readonly stderr: (text: string) => void;
+}
+
+const THORBIT_ADMIN_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE"] as const;
+
+type ThorbitAdminMethod = (typeof THORBIT_ADMIN_METHODS)[number];
+
+class ThorbitAdminHttpError extends Error {
+  readonly statusCode: number;
+  readonly code?: string;
+
+  constructor(statusCode: number, message: string, code?: string) {
+    super(message);
+    this.name = "ThorbitAdminHttpError";
+    this.statusCode = statusCode;
+    this.code = code;
+  }
+}
+
+function jsonObject(raw: string, label: string): Record<string, unknown> {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    throw new Error(`${label} must be valid JSON`);
+  }
+  if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
+    throw new Error(`${label} must be one JSON object`);
+  }
+  return parsed as Record<string, unknown>;
+}
+
+function adminUrl(baseUrl: string, pathInput: string): URL {
+  const base = new URL(baseUrl);
+  const trimmed = pathInput.trim();
+  if (
+    !trimmed ||
+    trimmed.includes("?") ||
+    trimmed.includes("#") ||
+    trimmed.includes("\\") ||
+    /^[A-Za-z][A-Za-z0-9+.-]*:/.test(trimmed) ||
+    trimmed.split("/").includes("..")
+  ) {
+    throw new Error("Admin requests are limited to /api/admin paths");
+  }
+  const pathname = trimmed.startsWith("/api/admin")
+    ? trimmed
+    : `/api/admin/${trimmed.replace(/^\/+/, "")}`;
+  const url = new URL(pathname, base);
+  if (
+    url.origin !== base.origin ||
+    (url.pathname !== "/api/admin" && !url.pathname.startsWith("/api/admin/"))
+  ) {
+    throw new Error("Admin requests are limited to /api/admin");
+  }
+  return url;
+}
+
+function addAdminQuery(url: URL, query: Record<string, unknown>): void {
+  for (const [key, value] of Object.entries(query)) {
+    if (value === undefined || value === null) continue;
+    url.searchParams.set(
+      key,
+      typeof value === "string" ? value : JSON.stringify(value),
+    );
+  }
+}
+
+function adminCredential(
+  options: ThorbitCliOptionValues,
+  env: Readonly<Record<string, string | undefined>>,
+): string {
+  const credential = options.adminApiKey?.trim() || env.THORBIT_ADMIN_API_KEY?.trim();
+  if (!credential) {
+    throw new ThorbitCliResultError(
+      "Missing admin API key; pass --admin-api-key or set THORBIT_ADMIN_API_KEY",
+      "unauthorized",
+    );
+  }
+  return credential;
+}
+
+async function callAdmin(
+  input: {
+    method: ThorbitAdminMethod;
+    path: string;
+    body?: Record<string, unknown>;
+    query?: Record<string, unknown>;
+    options: ThorbitCliOptionValues;
+  },
+  context: ThorbitCliContext,
+): Promise<unknown> {
+  const url = adminUrl(input.options.baseUrl, input.path);
+  addAdminQuery(url, input.query ?? {});
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), input.options.timeoutMs);
+  try {
+    const response = await context.fetch(url, {
+      method: input.method,
+      headers: {
+        accept: "application/json",
+        authorization: `Bearer ${adminCredential(input.options, context.env)}`,
+        ...(input.body ? { "content-type": "application/json" } : {}),
+      },
+      body: input.body ? JSON.stringify(input.body) : undefined,
+      signal: controller.signal,
+    });
+    const payload: unknown = await response.json().catch(() => null);
+    if (!response.ok) {
+      const envelope = recordValue(payload);
+      throw new ThorbitAdminHttpError(
+        response.status,
+        typeof envelope?.message === "string"
+          ? envelope.message
+          : `Admin request failed with HTTP ${response.status}`,
+        typeof envelope?.code === "string" ? envelope.code : undefined,
+      );
+    }
+    return payload;
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 function commandHelp(command: ThorbitGeneratedCliCommand): string {
@@ -295,6 +419,10 @@ export function createThorbitCliProgram(context: ThorbitCliContext): Command {
     })
     .option("--api-key <key>", "Thorbit API key (or set THORBIT_API_KEY)")
     .option(
+      "--admin-api-key <key>",
+      "personal admin API key (or set THORBIT_ADMIN_API_KEY)",
+    )
+    .option(
       "--base-url <url>",
       "Thorbit API base URL",
       THORBIT_DEFAULT_BASE_URL,
@@ -306,6 +434,60 @@ export function createThorbitCliProgram(context: ThorbitCliContext): Command {
       THORBIT_DEFAULT_TIMEOUT_MS,
     )
     .option("--output <format>", "output format: json or text", "text");
+
+  const admin = program
+    .command("admin")
+    .description("Use the private Phoenix admin API with your personal key");
+
+  admin
+    .command("whoami")
+    .description("Show the current operator, roles, and capabilities")
+    .action(async (_options: unknown, command: Command) => {
+      const options = command.optsWithGlobals() as ThorbitCliOptionValues;
+      const result = await callAdmin(
+        { method: "GET", path: "/api/admin", options },
+        context,
+      );
+      printResult(result, options.output, context.stdout);
+    });
+
+  admin
+    .command("request <method> <path>")
+    .description("Call an exact /api/admin path using the server's normal permissions")
+    .option("--query-json <json>", "query parameters as one JSON object", "{}")
+    .option("--body-json <json>", "request body as one JSON object", "{}")
+    .action(
+      async (
+        methodInput: string,
+        path: string,
+        _options: unknown,
+        command: Command,
+      ) => {
+        const options = command.optsWithGlobals() as ThorbitCliOptionValues & {
+          queryJson: string;
+          bodyJson: string;
+        };
+        const method = methodInput.toUpperCase();
+        if (!THORBIT_ADMIN_METHODS.includes(method as ThorbitAdminMethod)) {
+          throw new Error(
+            `Admin method must be one of ${THORBIT_ADMIN_METHODS.join(", ")}`,
+          );
+        }
+        const result = await callAdmin(
+          {
+            method: method as ThorbitAdminMethod,
+            path,
+            query: jsonObject(options.queryJson, "Admin query"),
+            ...(method === "GET"
+              ? {}
+              : { body: jsonObject(options.bodyJson, "Admin body") }),
+            options,
+          },
+          context,
+        );
+        printResult(result, options.output, context.stdout);
+      },
+    );
 
   for (const generatedCommand of THORBIT_GENERATED_COMMANDS) {
     commandOptions(
@@ -370,6 +552,12 @@ function exitCodeForError(error: unknown): number {
     if (error.code === "validation_error") return 2;
     return 6;
   }
+  if (error instanceof ThorbitAdminHttpError) {
+    if (error.statusCode === 401 || error.statusCode === 403) return 3;
+    if (error.statusCode === 429) return 5;
+    if (error.statusCode >= 400 && error.statusCode < 500) return 2;
+    return 6;
+  }
   if (error instanceof ThorbitRequestValidationError) return 2;
   if (
     error instanceof ThorbitTransportError ||
@@ -387,12 +575,17 @@ function knownSecrets(
 ): readonly string[] {
   const values = new Set<string>();
   if (env.THORBIT_API_KEY) values.add(env.THORBIT_API_KEY);
+  if (env.THORBIT_ADMIN_API_KEY) values.add(env.THORBIT_ADMIN_API_KEY);
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index];
     if (argument === "--api-key" && argv[index + 1]) {
       values.add(argv[index + 1]!);
     } else if (argument?.startsWith("--api-key=")) {
       values.add(argument.slice("--api-key=".length));
+    } else if (argument === "--admin-api-key" && argv[index + 1]) {
+      values.add(argv[index + 1]!);
+    } else if (argument?.startsWith("--admin-api-key=")) {
+      values.add(argument.slice("--admin-api-key=".length));
     }
   }
   return [...values].filter(Boolean);
@@ -415,6 +608,9 @@ function errorMessage(error: unknown): string {
   if (error instanceof ThorbitHttpError) {
     return `Thorbit request failed${error.code ? ` [${error.code}]` : ""}: ${error.message}`;
   }
+  if (error instanceof ThorbitAdminHttpError) {
+    return `Thorbit admin request failed${error.code ? ` [${error.code}]` : ""}: ${error.message}`;
+  }
   if (error instanceof ThorbitCliResultError) {
     return `Thorbit tool failed${error.code ? ` [${error.code}]` : ""}: ${error.message}`;
   }
@@ -434,6 +630,7 @@ export async function runThorbitCli(
     dependencies.stderr ?? ((text: string) => process.stderr.write(text));
   const context: ThorbitCliContext = {
     env,
+    fetch: dependencies.fetch ?? globalThis.fetch,
     stdout,
     stderr,
     client: dependencies.client,

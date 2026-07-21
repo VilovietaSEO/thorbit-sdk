@@ -1,8 +1,8 @@
 {
   "contractVersion": 1,
-  "generatedAt": "2026-07-16T00:57:50.297Z",
+  "generatedAt": "2026-07-21T14:46:34.442Z",
   "serverName": "thorbit-mcp",
-  "serverVersion": "0.3.0",
+  "serverVersion": "0.4.0",
   "productIds": [
     "account",
     "content",
@@ -18151,7 +18151,7 @@
     {
       "name": "thorbit_money_kw_start",
       "title": "Start Money Keyword Run",
-      "description": "Start a durable compact-keyword research run for one or more company/offer names — Mastra runtime, OpenRouter MiniMax 3, MCP Scraper evidence. companyNames is required; rootEntity, centralIntent, competitors, and seedTopics steer the research. Returns a runPublicId plus a thorbit_money_kw_get poll target — the tiered list is not returned inline; call thorbit_money_kw_get_targets once complete. Metered.",
+      "description": "Start a durable native-Mastra compact-keyword research run for one or more company/offer names — OpenRouter MiniMax 3 and MCP Scraper evidence. companyNames is required; websiteUrl, rootEntity, centralIntent, competitors, and seedTopics steer the research. Use idempotencyKey to retry safely. Returns a Phoenix-owned runPublicId plus a thorbit_money_kw_get poll target — the tiered list is not returned inline; call thorbit_money_kw_get_targets once complete. Metered.",
       "inputSchema": {
         "$schema": "http://json-schema.org/draft-07/schema#",
         "type": "object",
@@ -18166,6 +18166,12 @@
             },
             "minItems": 1,
             "maxItems": 20
+          },
+          "websiteUrl": {
+            "type": "string",
+            "description": "Optional canonical business website used for owned-site evidence.",
+            "maxLength": 2048,
+            "format": "uri"
           },
           "rootEntity": {
             "type": "string",
@@ -18200,6 +18206,12 @@
               "maxLength": 255
             },
             "maxItems": 25
+          },
+          "idempotencyKey": {
+            "type": "string",
+            "description": "Optional idempotency key for safely retrying the same start request.",
+            "minLength": 1,
+            "maxLength": 160
           }
         },
         "required": [
@@ -23159,10 +23171,10 @@
           },
           "maxCompetitorUrls": {
             "type": "integer",
-            "description": "Maximum URLs per competitor to inspect.",
-            "default": 35,
+            "description": "Maximum competitor URLs to map and classify per site.",
+            "default": 500,
             "minimum": 1,
-            "maximum": 100
+            "maximum": 500
           },
           "maxSerpQueries": {
             "type": "integer",

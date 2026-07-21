@@ -1219,7 +1219,7 @@ Response note: parse the structured `ok` branch on success. On `ok: false`, use 
 
 **Start Money Keyword Run** — money-kw
 
-Start a durable compact-keyword research run for one or more company/offer names — Mastra runtime, OpenRouter MiniMax 3, MCP Scraper evidence. companyNames is required; rootEntity, centralIntent, competitors, and seedTopics steer the research. Returns a runPublicId plus a thorbit_money_kw_get poll target — the tiered list is not returned inline; call thorbit_money_kw_get_targets once complete. Metered.
+Start a durable native-Mastra compact-keyword research run for one or more company/offer names — OpenRouter MiniMax 3 and MCP Scraper evidence. companyNames is required; websiteUrl, rootEntity, centralIntent, competitors, and seedTopics steer the research. Use idempotencyKey to retry safely. Returns a Phoenix-owned runPublicId plus a thorbit_money_kw_get poll target — the tiered list is not returned inline; call thorbit_money_kw_get_targets once complete. Metered.
 
 - Required scopes: `money_kw:run`
 - Result mode: `async`
@@ -1558,7 +1558,7 @@ Start a durable Topic Map run for a Thorbit project — Mastra runtime, OpenRout
 - Next tools: `thorbit_topic_map_get`
 
 ~~~bash
-curl --fail-with-body --silent --show-error --request POST --url "${THORBIT_BASE_URL}/api/v1/mcp/thorbit/thorbit_topic_map_start" --header "Authorization: Bearer ${THORBIT_API_KEY}" --header "Accept: application/vnd.thorbit.tool-result+json" --header "Content-Type: application/json" --data "{\"projectPublicId\":\"example_public_id\",\"seedQueries\":[],\"competitors\":[],\"maxCompetitors\":5,\"maxTargetUrls\":75,\"maxCompetitorUrls\":35,\"maxSerpQueries\":12,\"serpConcurrency\":50}"
+curl --fail-with-body --silent --show-error --request POST --url "${THORBIT_BASE_URL}/api/v1/mcp/thorbit/thorbit_topic_map_start" --header "Authorization: Bearer ${THORBIT_API_KEY}" --header "Accept: application/vnd.thorbit.tool-result+json" --header "Content-Type: application/json" --data "{\"projectPublicId\":\"example_public_id\",\"seedQueries\":[],\"competitors\":[],\"maxCompetitors\":5,\"maxTargetUrls\":75,\"maxCompetitorUrls\":500,\"maxSerpQueries\":12,\"serpConcurrency\":50}"
 ~~~
 
 Response note: parse the structured `ok` branch on success. On `ok: false`, use the returned error code/message and `requestId`; do not retry non-retryable validation, authorization, or payment errors unchanged.

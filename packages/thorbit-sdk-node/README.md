@@ -17,8 +17,6 @@ import { CallThorbitTools } from "thorbit-sdk";
 
 const thorbit = new CallThorbitTools({
   apiKey: process.env.THORBIT_API_KEY!,
-  // baseUrl: "https://thorbit.ai",
-  // timeoutMs: 120_000,
 });
 
 const response = await thorbit.thorbitAccountProjectsList({ limit: 25 });
@@ -30,30 +28,9 @@ if (response.ok) {
 }
 ```
 
-You can also call a generated tool name through `callTool` when dynamically selecting operations. Inputs and successful responses are validated against generated Zod schemas.
+Inputs and successful responses are validated against generated Zod schemas. Catch the exported stable error classes for validation, HTTP, timeout, response, and transport failures.
 
-## Authentication
-
-Pass the API key as `apiKey`. The SDK sends it only to the configured Thorbit base URL and requests the structured Thorbit result media type. Do not commit keys or place credentials in the base URL.
-
-## Errors
-
-Catch the exported stable error classes:
-
-- `ThorbitRequestValidationError`
-- `ThorbitHttpError`
-- `ThorbitResponseValidationError`
-- `ThorbitTimeoutError`
-- `ThorbitTransportError`
-
-## Development
-
-```bash
-npm install
-npm test
-npm run typecheck
-npm run build
-```
+Source and the generated contract are public at [VilovietaSEO/thorbit-sdk](https://github.com/VilovietaSEO/thorbit-sdk).
 
 ## License
 
