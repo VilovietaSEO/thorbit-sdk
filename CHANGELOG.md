@@ -4,6 +4,11 @@ All notable changes to the public Thorbit SDK source are documented here.
 
 ## [Unreleased]
 
+### Fixed
+
+- Install the required uv runtime before the provenance publisher runs the
+  repository full Node, CLI, and Python verification command.
+
 ## [0.2.0] - 2026-07-21
 
 ### Added
