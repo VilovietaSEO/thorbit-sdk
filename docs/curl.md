@@ -1197,6 +1197,42 @@ curl --fail-with-body --silent --show-error --request POST --url "${THORBIT_BASE
 
 Response note: parse the structured `ok` branch on success. On `ok: false`, use the returned error code/message and `requestId`; do not retry non-retryable validation, authorization, or payment errors unchanged.
 
+## `thorbit_money_kw_get_artifacts`
+
+**Read Full Money Keyword Research** — money-kw
+
+Return the complete retained research package for a completed Direct Codex Money Keyword run: the full keyword rows, candidate rows, research notes, priority report, and complete keyword-universe Markdown. Check thorbit_money_kw_get first: artifacts are available only once the run is completed.
+
+- Required scopes: `money_kw:read`
+- Result mode: `inline`
+- Cost: Low-cost synchronous caller-organization artifact read.
+- Side effects: None.
+- Next tools: None declared.
+
+~~~bash
+curl --fail-with-body --silent --show-error --request POST --url "${THORBIT_BASE_URL}/api/v1/mcp/thorbit/thorbit_money_kw_get_artifacts" --header "Authorization: Bearer ${THORBIT_API_KEY}" --header "Accept: application/vnd.thorbit.tool-result+json" --header "Content-Type: application/json" --data "{\"runPublicId\":\"example_public_id\"}"
+~~~
+
+Response note: parse the structured `ok` branch on success. On `ok: false`, use the returned error code/message and `requestId`; do not retry non-retryable validation, authorization, or payment errors unchanged.
+
+## `thorbit_money_kw_get_page`
+
+**Get Money Keyword Page** — money-kw
+
+Poll one page-writing run or retrieve its Neon-backed research, brief, validated page draft, SEO fields, validation receipt, and artifact digests. The result remains available after Fly runtime retention expires.
+
+- Required scopes: `money_kw:read`
+- Result mode: `inline`
+- Cost: Low-cost caller-organization Neon read.
+- Side effects: None.
+- Next tools: None declared.
+
+~~~bash
+curl --fail-with-body --silent --show-error --request POST --url "${THORBIT_BASE_URL}/api/v1/mcp/thorbit/thorbit_money_kw_get_page" --header "Authorization: Bearer ${THORBIT_API_KEY}" --header "Accept: application/vnd.thorbit.tool-result+json" --header "Content-Type: application/json" --data "{\"writerRunPublicId\":\"example_public_id\"}"
+~~~
+
+Response note: parse the structured `ok` branch on success. On `ok: false`, use the returned error code/message and `requestId`; do not retry non-retryable validation, authorization, or payment errors unchanged.
+
 ## `thorbit_money_kw_get_targets`
 
 **Read Money Keyword List** — money-kw
@@ -1215,16 +1251,34 @@ curl --fail-with-body --silent --show-error --request POST --url "${THORBIT_BASE
 
 Response note: parse the structured `ok` branch on success. On `ok: false`, use the returned error code/message and `requestId`; do not retry non-retryable validation, authorization, or payment errors unchanged.
 
+## `thorbit_money_kw_list_pages`
+
+**List Money Keyword Pages** — money-kw
+
+List caller-organization Money Keyword page runs from Neon, optionally filtered by project and status. Returns summaries; use thorbit_money_kw_get_page for full research, brief, and draft Markdown.
+
+- Required scopes: `money_kw:read`
+- Result mode: `paginated`
+- Cost: Low-cost caller-organization Neon read.
+- Side effects: None.
+- Next tools: `thorbit_money_kw_get_page`
+
+~~~bash
+curl --fail-with-body --silent --show-error --request POST --url "${THORBIT_BASE_URL}/api/v1/mcp/thorbit/thorbit_money_kw_list_pages" --header "Authorization: Bearer ${THORBIT_API_KEY}" --header "Accept: application/vnd.thorbit.tool-result+json" --header "Content-Type: application/json" --data "{\"limit\":25}"
+~~~
+
+Response note: parse the structured `ok` branch on success. On `ok: false`, use the returned error code/message and `requestId`; do not retry non-retryable validation, authorization, or payment errors unchanged.
+
 ## `thorbit_money_kw_start`
 
 **Start Money Keyword Run** — money-kw
 
-Start a durable native-Mastra compact-keyword research run for one or more company/offer names — OpenRouter MiniMax 3 and MCP Scraper evidence. companyNames is required; websiteUrl, rootEntity, centralIntent, competitors, and seedTopics steer the research. Use idempotencyKey to retry safely. Returns a Phoenix-owned runPublicId plus a thorbit_money_kw_get poll target — the tiered list is not returned inline; call thorbit_money_kw_get_targets once complete. Metered.
+Start a durable commercial keyword research run. Provide websiteUrl for the Direct Codex path; companyNames, rootEntity, centralIntent, competitors, and seedTopics steer the research. Use idempotencyKey to retry safely. Returns a Phoenix-owned runPublicId plus a thorbit_money_kw_get poll target — the list is not returned inline; call thorbit_money_kw_get_targets and thorbit_money_kw_get_artifacts once complete. Metered.
 
 - Required scopes: `money_kw:run`
 - Result mode: `async`
-- Cost: Metered asynchronous Mastra research using model and MCP Scraper provider calls.
-- Side effects: Creates a durable Mastra-backed Money Keyword research run. Records metered research usage for the caller organization.
+- Cost: Metered asynchronous commercial keyword research.
+- Side effects: Creates a durable Money Keyword research run. Records metered research usage for the caller organization.
 - Next tools: `thorbit_money_kw_get`
 
 ~~~bash
@@ -1237,6 +1291,30 @@ Async next call: poll or continue with `thorbit_money_kw_get` using the identifi
 
 ~~~bash
 curl --fail-with-body --silent --show-error --request POST --url "${THORBIT_BASE_URL}/api/v1/mcp/thorbit/thorbit_money_kw_get" --header "Authorization: Bearer ${THORBIT_API_KEY}" --header "Accept: application/vnd.thorbit.tool-result+json" --header "Content-Type: application/json" --data "{\"runPublicId\":\"example_public_id\"}"
+~~~
+
+## `thorbit_money_kw_write_page`
+
+**Write Money Keyword Page** — money-kw
+
+Start one Codex Money Keyword page run. The worker uses MCP Scraper evidence to produce research, a writer brief, and a validated commercial page draft. Phoenix creates the durable organization/project identity first and stores accepted output in Neon. Returns immediately; poll thorbit_money_kw_get_page.
+
+- Required scopes: `money_kw:run`
+- Result mode: `async`
+- Cost: Metered asynchronous Codex page research and writing with MCP Scraper evidence.
+- Side effects: Creates a project-scoped content writer run in Thorbit. Performs external web research and stores the accepted output in Neon.
+- Next tools: `thorbit_money_kw_get_page`
+
+~~~bash
+curl --fail-with-body --silent --show-error --request POST --url "${THORBIT_BASE_URL}/api/v1/mcp/thorbit/thorbit_money_kw_write_page" --header "Authorization: Bearer ${THORBIT_API_KEY}" --header "Accept: application/vnd.thorbit.tool-result+json" --header "Content-Type: application/json" --data "{\"projectPublicId\":\"example_public_id\",\"targetUrl\":\"https://example.com\",\"keyword\":\"example query\",\"recommendedUrl\":\"https://example.com\"}"
+~~~
+
+Response note: parse the structured `ok` branch on success. On `ok: false`, use the returned error code/message and `requestId`; do not retry non-retryable validation, authorization, or payment errors unchanged.
+
+Async next call: poll or continue with `thorbit_money_kw_get_page` using the identifier returned by the first call.
+
+~~~bash
+curl --fail-with-body --silent --show-error --request POST --url "${THORBIT_BASE_URL}/api/v1/mcp/thorbit/thorbit_money_kw_get_page" --header "Authorization: Bearer ${THORBIT_API_KEY}" --header "Accept: application/vnd.thorbit.tool-result+json" --header "Content-Type: application/json" --data "{\"writerRunPublicId\":\"example_public_id\"}"
 ~~~
 
 ## `thorbit_onpage_apply_edits`
@@ -1459,7 +1537,7 @@ Response note: parse the structured `ok` branch on success. On `ok: false`, use 
 
 **Read Topic Map Artifact** — topic-map
 
-Read ONE artifact from a run by artifact id — use this instead of pulling the whole run when you only need one piece of evidence. Artifact ids come from thorbit_topic_map_get's manifest. For the finished composed map itself, use thorbit_topic_map_get_map instead. Returns a small inline preview by default (maxBytes default 2,000, truncated with a flag) plus a permanent blobUrl link to the full content when the artifact is blob-backed — do not raise maxBytes to dump the whole thing into context by default; offer the user the link, or explicitly raise maxBytes only when you genuinely need more inline.
+Read ONE durable artifact by id. Completed Codex runs expose final_list and candidate_ledger in complete Markdown and paginated JSON, plus research_synthesis, evidence_accounting, research_corpus, and final_output. For final_list or candidate_ledger, choose format json and paginate records with limit, or format markdown and continue by maxBytes. Carry continuationToken forward unchanged until null; never treat the first page as the complete artifact.
 
 - Required scopes: `topic_map:read`
 - Result mode: `artifact`
@@ -1468,7 +1546,7 @@ Read ONE artifact from a run by artifact id — use this instead of pulling the 
 - Next tools: None declared.
 
 ~~~bash
-curl --fail-with-body --silent --show-error --request POST --url "${THORBIT_BASE_URL}/api/v1/mcp/thorbit/thorbit_topic_map_artifact_read" --header "Authorization: Bearer ${THORBIT_API_KEY}" --header "Accept: application/vnd.thorbit.tool-result+json" --header "Content-Type: application/json" --data "{\"runPublicId\":\"example_public_id\",\"artifactId\":\"example_public_id\",\"maxBytes\":2000}"
+curl --fail-with-body --silent --show-error --request POST --url "${THORBIT_BASE_URL}/api/v1/mcp/thorbit/thorbit_topic_map_artifact_read" --header "Authorization: Bearer ${THORBIT_API_KEY}" --header "Accept: application/vnd.thorbit.tool-result+json" --header "Content-Type: application/json" --data "{\"runPublicId\":\"example_public_id\",\"artifactId\":\"example_public_id\",\"format\":\"stored\",\"limit\":50,\"maxBytes\":20000}"
 ~~~
 
 Response note: parse the structured `ok` branch on success. On `ok: false`, use the returned error code/message and `requestId`; do not retry non-retryable validation, authorization, or payment errors unchanged.
@@ -1549,16 +1627,16 @@ Response note: parse the structured `ok` branch on success. On `ok: false`, use 
 
 **Start Topic Map Run** — topic-map
 
-Start a durable Topic Map run for a Thorbit project — Mastra runtime, OpenRouter MiniMax 3, MCP Scraper web research. Pass targetUrl/domain only if different from the project's own website; brandName, niche, location, icpContent, seedQueries, and competitors all steer the research. Returns a runPublicId plus a thorbit_topic_map_get poll target — the map itself is not returned inline; call thorbit_topic_map_get_map once complete. Metered.
+Start a durable single-agent Codex Topic Map run for a Thorbit project — OpenRouter Google Gemini 3.6 Flash at high reasoning, local stdio MCP Scraper research, and a 150–500 page completion contract. Pass targetUrl/domain only if different from the project's own website; brandName, niche, location, icpContent, seedQueries, and competitors steer the research. Returns a runPublicId plus a thorbit_topic_map_get poll target. Metered.
 
 - Required scopes: `topic_map:run`
 - Result mode: `async`
-- Cost: Metered hosted Mastra, model, and web-research execution.
+- Cost: Metered hosted Codex, model, and MCP Scraper execution.
 - Side effects: Creates and dispatches a durable caller-organization Topic Map run. May consume Thorbit credits and perform external web research.
 - Next tools: `thorbit_topic_map_get`
 
 ~~~bash
-curl --fail-with-body --silent --show-error --request POST --url "${THORBIT_BASE_URL}/api/v1/mcp/thorbit/thorbit_topic_map_start" --header "Authorization: Bearer ${THORBIT_API_KEY}" --header "Accept: application/vnd.thorbit.tool-result+json" --header "Content-Type: application/json" --data "{\"projectPublicId\":\"example_public_id\",\"seedQueries\":[],\"competitors\":[],\"maxCompetitors\":5,\"maxTargetUrls\":75,\"maxCompetitorUrls\":500,\"maxSerpQueries\":12,\"serpConcurrency\":50}"
+curl --fail-with-body --silent --show-error --request POST --url "${THORBIT_BASE_URL}/api/v1/mcp/thorbit/thorbit_topic_map_start" --header "Authorization: Bearer ${THORBIT_API_KEY}" --header "Accept: application/vnd.thorbit.tool-result+json" --header "Content-Type: application/json" --data "{\"projectPublicId\":\"example_public_id\",\"seedQueries\":[],\"competitors\":[],\"maxCompetitors\":5,\"maxTargetUrls\":75,\"maxCompetitorUrls\":500,\"maxSerpQueries\":12,\"serpConcurrency\":1}"
 ~~~
 
 Response note: parse the structured `ok` branch on success. On `ok: false`, use the returned error code/message and `requestId`; do not retry non-retryable validation, authorization, or payment errors unchanged.
