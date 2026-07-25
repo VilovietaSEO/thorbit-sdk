@@ -1,6 +1,6 @@
 # Thorbit CLI
 
-Generated command-line interface for all 79 tools in the unified Thorbit API.
+Generated command-line interface for all 84 tools in the unified Thorbit API.
 
 ## Install
 

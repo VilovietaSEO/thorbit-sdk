@@ -1,6 +1,6 @@
 # Thorbit Python SDK
 
-Typed Python client for the unified Thorbit API. Generated Pydantic models and methods cover all 79 Thorbit tools.
+Typed Python client for the unified Thorbit API. Generated Pydantic models and methods cover all 84 Thorbit tools.
 
 ## Install
 

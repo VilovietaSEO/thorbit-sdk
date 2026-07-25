@@ -4,10 +4,24 @@ All notable changes to the public Thorbit SDK source are documented here.
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-07-25
+
+### Added
+
+- Expose `thorbit_money_kw_artifact_read` across the Node SDK, Python SDK, CLI,
+  cURL guide, and canonical 84-tool contract.
+- Support paginated reads of the complete final Money Keyword list, candidate
+  ledger, research, and run artifacts without rerunning the workflow.
+
+### Changed
+
+- Update every generated public client surface to the Thorbit Phoenix 0.17.0
+  Money Keyword retrieval contract.
+
 ### Fixed
 
-- Install the required uv runtime before the provenance publisher runs the
-  repository full Node, CLI, and Python verification command.
+- Preserve the uv runtime setup required by the provenance publisher's full
+  Node, CLI, and Python verification command.
 
 ## [0.2.0] - 2026-07-21
 
@@ -30,5 +44,6 @@ All notable changes to the public Thorbit SDK source are documented here.
 - Correct stale Money Keyword and Topic Map descriptions, input caps, and
   examples in generated clients and cURL documentation.
 
-[Unreleased]: https://github.com/VilovietaSEO/thorbit-sdk/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/VilovietaSEO/thorbit-sdk/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/VilovietaSEO/thorbit-sdk/compare/v0.4.0...v0.5.0
 [0.2.0]: https://github.com/VilovietaSEO/thorbit-sdk/compare/v0.1.0...v0.2.0
