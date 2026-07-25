@@ -2039,6 +2039,52 @@ export const THORBIT_GENERATED_COMMANDS = [
     ]
   },
   {
+    "command": "thorbit-money-kw-artifact-read",
+    "toolName": "thorbit_money_kw_artifact_read",
+    "productId": "money-kw",
+    "title": "Read Money Keyword Artifact",
+    "description": "Read ONE retained Money Keyword artifact by stable id. final_list contains every accepted target; candidate_ledger contains accepted and rejected rows; candidates contains the raw generated universe; money_keywords, keyword_universe, research, and run_status expose stored Markdown. Use format:\"json\" with limit for record pages or format:\"markdown\" with maxBytes for text pages. Carry continuationToken forward unchanged as cursor until it is null. Read-only and does not rerun research or charge credits.",
+    "requiredInputFields": [
+      "runPublicId",
+      "artifactId"
+    ],
+    "inputDefaults": {
+      "format": "stored",
+      "limit": 50,
+      "maxBytes": 20000
+    },
+    "inputCaps": {
+      "runPublicId": {
+        "minLength": 1
+      },
+      "artifactId": {
+        "minLength": 1,
+        "maxLength": 128
+      },
+      "cursor": {
+        "minLength": 1,
+        "maxLength": 512
+      },
+      "limit": {
+        "minimum": 1,
+        "maximum": 100
+      },
+      "maxBytes": {
+        "minimum": 1000,
+        "maximum": 500000
+      }
+    },
+    "requiredScopes": [
+      "money_kw:read"
+    ],
+    "costSummary": "Low-cost paginated caller-organization artifact read.",
+    "sideEffects": [],
+    "resultMode": "paginated",
+    "nextTools": [
+      "thorbit_money_kw_artifact_read"
+    ]
+  },
+  {
     "command": "thorbit-money-kw-get",
     "toolName": "thorbit_money_kw_get",
     "productId": "money-kw",
@@ -2062,6 +2108,55 @@ export const THORBIT_GENERATED_COMMANDS = [
     "nextTools": [
       "thorbit_money_kw_get_targets"
     ]
+  },
+  {
+    "command": "thorbit-money-kw-get-artifacts",
+    "toolName": "thorbit_money_kw_get_artifacts",
+    "productId": "money-kw",
+    "title": "Read Full Money Keyword Research",
+    "description": "Discover every retained artifact and the hosted HTML results page for a completed Direct Codex Money Keyword run. Returns an inline artifact manifest with stable ids and the viewer URL while retaining the original package for compatibility. For reliable complete content, next call thorbit_money_kw_artifact_read instead of relying on one oversized inline response.",
+    "requiredInputFields": [
+      "runPublicId"
+    ],
+    "inputDefaults": {},
+    "inputCaps": {
+      "runPublicId": {
+        "minLength": 1
+      }
+    },
+    "requiredScopes": [
+      "money_kw:read"
+    ],
+    "costSummary": "Low-cost synchronous caller-organization artifact read.",
+    "sideEffects": [],
+    "resultMode": "inline",
+    "nextTools": [
+      "thorbit_money_kw_artifact_read"
+    ]
+  },
+  {
+    "command": "thorbit-money-kw-get-page",
+    "toolName": "thorbit_money_kw_get_page",
+    "productId": "money-kw",
+    "title": "Get Money Keyword Page",
+    "description": "Poll one page-writing run or retrieve its Neon-backed research, brief, validated page draft, SEO fields, validation receipt, and artifact digests. The result remains available after Fly runtime retention expires.",
+    "requiredInputFields": [
+      "writerRunPublicId"
+    ],
+    "inputDefaults": {},
+    "inputCaps": {
+      "writerRunPublicId": {
+        "minLength": 1,
+        "maxLength": 128
+      }
+    },
+    "requiredScopes": [
+      "money_kw:read"
+    ],
+    "costSummary": "Low-cost caller-organization Neon read.",
+    "sideEffects": [],
+    "resultMode": "inline",
+    "nextTools": []
   },
   {
     "command": "thorbit-money-kw-get-targets",
@@ -2093,11 +2188,41 @@ export const THORBIT_GENERATED_COMMANDS = [
     "nextTools": []
   },
   {
+    "command": "thorbit-money-kw-list-pages",
+    "toolName": "thorbit_money_kw_list_pages",
+    "productId": "money-kw",
+    "title": "List Money Keyword Pages",
+    "description": "List caller-organization Money Keyword page runs from Neon, optionally filtered by project and status. Returns summaries; use thorbit_money_kw_get_page for full research, brief, and draft Markdown.",
+    "requiredInputFields": [],
+    "inputDefaults": {
+      "limit": 25
+    },
+    "inputCaps": {
+      "projectPublicId": {
+        "minLength": 1,
+        "maxLength": 128
+      },
+      "limit": {
+        "minimum": 1,
+        "maximum": 100
+      }
+    },
+    "requiredScopes": [
+      "money_kw:read"
+    ],
+    "costSummary": "Low-cost caller-organization Neon read.",
+    "sideEffects": [],
+    "resultMode": "paginated",
+    "nextTools": [
+      "thorbit_money_kw_get_page"
+    ]
+  },
+  {
     "command": "thorbit-money-kw-start",
     "toolName": "thorbit_money_kw_start",
     "productId": "money-kw",
     "title": "Start Money Keyword Run",
-    "description": "Start a durable native-Mastra compact-keyword research run for one or more company/offer names — OpenRouter MiniMax 3 and MCP Scraper evidence. companyNames is required; websiteUrl, rootEntity, centralIntent, competitors, and seedTopics steer the research. Use idempotencyKey to retry safely. Returns a Phoenix-owned runPublicId plus a thorbit_money_kw_get poll target — the tiered list is not returned inline; call thorbit_money_kw_get_targets once complete. Metered.",
+    "description": "Start a durable commercial keyword research run. Provide websiteUrl for the Direct Codex path; companyNames, rootEntity, centralIntent, competitors, and seedTopics steer the research. Use idempotencyKey to retry safely. Returns a Phoenix-owned runPublicId plus a thorbit_money_kw_get poll target — the list is not returned inline; call thorbit_money_kw_get_targets and thorbit_money_kw_get_artifacts once complete. Metered.",
     "requiredInputFields": [
       "companyNames"
     ],
@@ -2135,14 +2260,65 @@ export const THORBIT_GENERATED_COMMANDS = [
     "requiredScopes": [
       "money_kw:run"
     ],
-    "costSummary": "Metered asynchronous Mastra research using model and MCP Scraper provider calls.",
+    "costSummary": "Metered asynchronous commercial keyword research.",
     "sideEffects": [
-      "Creates a durable Mastra-backed Money Keyword research run.",
+      "Creates a durable Money Keyword research run.",
       "Records metered research usage for the caller organization."
     ],
     "resultMode": "async",
     "nextTools": [
       "thorbit_money_kw_get"
+    ]
+  },
+  {
+    "command": "thorbit-money-kw-write-page",
+    "toolName": "thorbit_money_kw_write_page",
+    "productId": "money-kw",
+    "title": "Write Money Keyword Page",
+    "description": "Start one Codex Money Keyword page run. The worker uses MCP Scraper evidence to produce research, a writer brief, and a validated commercial page draft. Phoenix creates the durable organization/project identity first and stores accepted output in Neon. Returns immediately; poll thorbit_money_kw_get_page.",
+    "requiredInputFields": [
+      "projectPublicId",
+      "targetUrl",
+      "keyword",
+      "recommendedUrl"
+    ],
+    "inputDefaults": {},
+    "inputCaps": {
+      "projectPublicId": {
+        "minLength": 1,
+        "maxLength": 128
+      },
+      "targetUrl": {
+        "maxLength": 2048
+      },
+      "keyword": {
+        "minLength": 1,
+        "maxLength": 255
+      },
+      "recommendedUrl": {
+        "minLength": 1,
+        "maxLength": 2048
+      },
+      "sourceRunPublicId": {
+        "minLength": 1,
+        "maxLength": 128
+      },
+      "idempotencyKey": {
+        "minLength": 1,
+        "maxLength": 160
+      }
+    },
+    "requiredScopes": [
+      "money_kw:run"
+    ],
+    "costSummary": "Metered asynchronous Codex page research and writing with MCP Scraper evidence.",
+    "sideEffects": [
+      "Creates a project-scoped content writer run in Thorbit.",
+      "Performs external web research and stores the accepted output in Neon."
+    ],
+    "resultMode": "async",
+    "nextTools": [
+      "thorbit_money_kw_get_page"
     ]
   },
   {
@@ -2500,13 +2676,15 @@ export const THORBIT_GENERATED_COMMANDS = [
     "toolName": "thorbit_topic_map_artifact_read",
     "productId": "topic-map",
     "title": "Read Topic Map Artifact",
-    "description": "Read ONE artifact from a run by artifact id — use this instead of pulling the whole run when you only need one piece of evidence. Artifact ids come from thorbit_topic_map_get's manifest. For the finished composed map itself, use thorbit_topic_map_get_map instead. Returns a small inline preview by default (maxBytes default 2,000, truncated with a flag) plus a permanent blobUrl link to the full content when the artifact is blob-backed — do not raise maxBytes to dump the whole thing into context by default; offer the user the link, or explicitly raise maxBytes only when you genuinely need more inline.",
+    "description": "Read ONE durable artifact by id. Completed Codex runs expose final_list and candidate_ledger in complete Markdown and paginated JSON, plus research_synthesis, evidence_accounting, research_corpus, and final_output. For final_list or candidate_ledger, choose format json and paginate records with limit, or format markdown and continue by maxBytes. Carry continuationToken forward unchanged until null; never treat the first page as the complete artifact.",
     "requiredInputFields": [
       "runPublicId",
       "artifactId"
     ],
     "inputDefaults": {
-      "maxBytes": 2000
+      "format": "stored",
+      "limit": 50,
+      "maxBytes": 20000
     },
     "inputCaps": {
       "runPublicId": {
@@ -2515,9 +2693,17 @@ export const THORBIT_GENERATED_COMMANDS = [
       "artifactId": {
         "minLength": 1
       },
+      "cursor": {
+        "minLength": 1,
+        "maxLength": 512
+      },
+      "limit": {
+        "minimum": 1,
+        "maximum": 100
+      },
       "maxBytes": {
         "minimum": 1000,
-        "maximum": 1000000
+        "maximum": 500000
       }
     },
     "requiredScopes": [
@@ -2668,7 +2854,7 @@ export const THORBIT_GENERATED_COMMANDS = [
     "toolName": "thorbit_topic_map_start",
     "productId": "topic-map",
     "title": "Start Topic Map Run",
-    "description": "Start a durable Topic Map run for a Thorbit project — Mastra runtime, OpenRouter MiniMax 3, MCP Scraper web research. Pass targetUrl/domain only if different from the project's own website; brandName, niche, location, icpContent, seedQueries, and competitors all steer the research. Returns a runPublicId plus a thorbit_topic_map_get poll target — the map itself is not returned inline; call thorbit_topic_map_get_map once complete. Metered.",
+    "description": "Start a durable single-agent Codex Topic Map run for a Thorbit project — OpenRouter Google Gemini 3.6 Flash at high reasoning, local stdio MCP Scraper research, and a 150–500 page completion contract. Pass targetUrl/domain only if different from the project's own website; brandName, niche, location, icpContent, seedQueries, and competitors steer the research. Returns a runPublicId plus a thorbit_topic_map_get poll target. Metered.",
     "requiredInputFields": [
       "projectPublicId"
     ],
@@ -2679,7 +2865,7 @@ export const THORBIT_GENERATED_COMMANDS = [
       "maxTargetUrls": 75,
       "maxCompetitorUrls": 500,
       "maxSerpQueries": 12,
-      "serpConcurrency": 50
+      "serpConcurrency": 1
     },
     "inputCaps": {
       "projectPublicId": {
@@ -2732,7 +2918,7 @@ export const THORBIT_GENERATED_COMMANDS = [
       },
       "serpConcurrency": {
         "minimum": 1,
-        "maximum": 50
+        "maximum": 1
       },
       "idempotencyKey": {
         "minLength": 1,
@@ -2742,7 +2928,7 @@ export const THORBIT_GENERATED_COMMANDS = [
     "requiredScopes": [
       "topic_map:run"
     ],
-    "costSummary": "Metered hosted Mastra, model, and web-research execution.",
+    "costSummary": "Metered hosted Codex, model, and MCP Scraper execution.",
     "sideEffects": [
       "Creates and dispatches a durable caller-organization Topic Map run.",
       "May consume Thorbit credits and perform external web research."

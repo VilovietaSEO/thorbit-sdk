@@ -1,6 +1,6 @@
 # Thorbit Node.js SDK
 
-Typed Node.js client for the unified Thorbit API. The generated surface includes one method, input schema, output schema, and TypeScript type set for each of the 79 Thorbit tools.
+Typed Node.js client for the unified Thorbit API. The generated surface includes one method, input schema, output schema, and TypeScript type set for each of the 84 Thorbit tools.
 
 ## Install
 
