@@ -1,6 +1,6 @@
 # Thorbit CLI
 
-Generated command-line interface for all 84 tools in the unified Thorbit API.
+Generated command-line interface for all 117 tools in the unified Thorbit API.
 
 ## Install
 
@@ -15,6 +15,14 @@ export THORBIT_API_KEY="replace-with-your-key"
 
 thorbit thorbit-account-projects-list \
   --input-json '{"limit":25}' \
+  --output json
+```
+
+Create an image opportunity board without invoking paid image generation:
+
+```bash
+thorbit thorbit-images-start \
+  --input-json '{"sourceText":"Article text here","mode":"opportunity_board_only"}' \
   --output json
 ```
 

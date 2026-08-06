@@ -4,6 +4,20 @@ All notable changes to the public Thorbit SDK source are documented here.
 
 ## [Unreleased]
 
+## [0.10.1] - 2026-08-05
+
+### Added
+
+- Add Purposeful Images across the Node SDK, Python SDK, CLI, cURL guide, and
+  canonical 117-tool contract.
+- Expose opportunity-board planning, selected image production, status,
+  review, artifact, and cost operations through generated clients.
+
+### Changed
+
+- Regenerate every public client surface for 12 specialist MCP products and
+  add automatic prepublish builds to the Node SDK and CLI packages.
+
 ## [0.5.0] - 2026-07-25
 
 ### Added
@@ -44,6 +58,7 @@ All notable changes to the public Thorbit SDK source are documented here.
 - Correct stale Money Keyword and Topic Map descriptions, input caps, and
   examples in generated clients and cURL documentation.
 
-[Unreleased]: https://github.com/VilovietaSEO/thorbit-sdk/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/VilovietaSEO/thorbit-sdk/compare/v0.10.1...HEAD
+[0.10.1]: https://github.com/VilovietaSEO/thorbit-sdk/compare/v0.5.0...v0.10.1
 [0.5.0]: https://github.com/VilovietaSEO/thorbit-sdk/compare/v0.4.0...v0.5.0
 [0.2.0]: https://github.com/VilovietaSEO/thorbit-sdk/compare/v0.1.0...v0.2.0
