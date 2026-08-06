@@ -506,7 +506,7 @@ export function createThorbitCliProgram(context: ThorbitCliContext): Command {
       .description("Call one Thorbit MCP tool by its exact manifest name")
       .addHelpText(
         "after",
-        "\nThe exact MCP name is validated against the generated 84-tool catalog.\n",
+        "\nThe exact MCP name is validated against the generated 105-tool catalog.\n",
       ),
   ).action(
     async (

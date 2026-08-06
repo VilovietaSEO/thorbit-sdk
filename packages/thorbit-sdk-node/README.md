@@ -1,6 +1,6 @@
 # Thorbit Node.js SDK
 
-Typed Node.js client for the unified Thorbit API. The generated surface includes one method, input schema, output schema, and TypeScript type set for each of the 84 Thorbit tools.
+Typed Node.js client for the unified Thorbit API. The generated surface includes one method, input schema, output schema, and TypeScript type set for each of the 117 Thorbit tools.
 
 ## Install
 
@@ -26,6 +26,20 @@ if (response.ok) {
 } else {
   console.error(response.error?.code, response.error?.message);
 }
+```
+
+Purposeful Images uses a plan-then-produce flow:
+
+```ts
+const article = "A complete article to analyze for useful image opportunities.";
+const board = await thorbit.thorbitImagesStart({
+  sourceText: article,
+  mode: "opportunity_board_only",
+});
+
+const run = await thorbit.thorbitImagesGet({
+  runPublicId: board.result!.runPublicId,
+});
 ```
 
 Inputs and successful responses are validated against generated Zod schemas. Catch the exported stable error classes for validation, HTTP, timeout, response, and transport failures.
