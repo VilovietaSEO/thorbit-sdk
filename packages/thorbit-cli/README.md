@@ -55,4 +55,4 @@ MIT
 
 ## Release 0.11.0
 
-Bindings cover the current 148-tool Thorbit contract. Node SDK and CLI schemas require Zod 4; Python retains Pydantic 2. Existing per-tool batch limits are preserved. Standard Node requests use the MCP SDK's existing 10 MiB transport allowance, and hosted providers may impose a lower body limit. See the [package changelog](https://github.com/VilovietaSEO/thorbit-sdk/blob/main/packages/thorbit-cli/CHANGELOG.md) and [migration notes](https://github.com/VilovietaSEO/thorbit-phoenix/blob/codex-harness/docs/releases/thorbit-mcp-zod4-migration.md).
+Bindings cover the current 148-tool Thorbit contract. Node SDK and CLI schemas require Zod 4; Python retains Pydantic 2. Existing per-tool batch limits are preserved. Standard Node requests use the MCP SDK's existing 10 MiB transport allowance, and hosted providers may impose a lower body limit. See the [package changelog](https://github.com/VilovietaSEO/thorbit-sdk/blob/main/packages/thorbit-cli/CHANGELOG.md) and [migration notes](https://github.com/VilovietaSEO/thorbit-sdk/blob/main/docs/zod4-migration.md).
