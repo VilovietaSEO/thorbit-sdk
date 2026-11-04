@@ -1,15 +1,15 @@
 # Changelog
 
+All notable changes to the public Thorbit SDK source are documented here.
+
+## [Unreleased]
+
 ## [0.11.0] - 2026-11-04
 
 ### Changed
 
 - Publish matched Node SDK, CLI and Python SDK for the current 148-tool contract. Node SDK and CLI require Zod 4 and enforce shared input limits before validation or transmission.
 - Preserve Python's Pydantic 2 API and refresh generated models. Public npm archives omit source maps.
-
-All notable changes to the public Thorbit SDK source are documented here.
-
-## [Unreleased]
 
 ## [0.10.1] - 2026-08-05
 
@@ -65,10 +65,9 @@ All notable changes to the public Thorbit SDK source are documented here.
 - Correct stale Money Keyword and Topic Map descriptions, input caps, and
   examples in generated clients and cURL documentation.
 
-[Unreleased]: https://github.com/VilovietaSEO/thorbit-sdk/compare/v0.10.1...HEAD
+[Unreleased]: https://github.com/VilovietaSEO/thorbit-sdk/compare/v0.11.0...HEAD
 [0.10.1]: https://github.com/VilovietaSEO/thorbit-sdk/compare/v0.5.0...v0.10.1
 [0.5.0]: https://github.com/VilovietaSEO/thorbit-sdk/compare/v0.4.0...v0.5.0
 [0.2.0]: https://github.com/VilovietaSEO/thorbit-sdk/compare/v0.1.0...v0.2.0
 
-[Unreleased]: https://github.com/VilovietaSEO/thorbit-sdk/compare/v0.11.0...HEAD
 [0.11.0]: https://github.com/VilovietaSEO/thorbit-sdk/compare/v0.10.1...v0.11.0
