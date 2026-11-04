@@ -2,7 +2,7 @@
 
 Typed clients and generated command surfaces for the unified Thorbit API.
 
-This repository contains customer-safe interfaces for all 79 Thorbit tools across Account, Knowledge Graph, Topic Map, ICP, Deposition, Money Keyword Research, Knowledge Base, and Content/On-page.
+This repository contains customer-safe interfaces for all 148 Thorbit tools across Account, Knowledge Graph, Topic Map, ICP, Deposition, Money Keyword Research, Knowledge Base, Content/On-page, Foundation, WordPress, Google Analytics and Search Console.
 
 ## Included surfaces
 

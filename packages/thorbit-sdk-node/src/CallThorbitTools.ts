@@ -1,3 +1,4 @@
+import { assertThorbitMcpInput } from './input-limits'
 import type { z } from 'zod'
 
 import type { IThorbitClient } from './IThorbitClient'
@@ -33,6 +34,7 @@ export class CallThorbitTools
     input: TInput,
     outputSchema: z.ZodType<TOutput>,
   ): Promise<TOutput> {
+    assertThorbitMcpInput(input)
     return this.#transport.callTool(toolName, input, outputSchema)
   }
 }
