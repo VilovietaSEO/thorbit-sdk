@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 
-## [0.11.0] - 2026-11-04
+## [0.13.0] - 2026-11-04
 
 ### Changed
 
@@ -11,5 +11,5 @@
 - Omit source maps from public npm archives.
 
 
-[Unreleased]: https://github.com/VilovietaSEO/thorbit-sdk/compare/python-v0.11.0...HEAD
-[0.11.0]: https://github.com/VilovietaSEO/thorbit-sdk/compare/v0.10.1...python-v0.11.0
+[Unreleased]: https://github.com/VilovietaSEO/thorbit-sdk/compare/python-v0.13.0...HEAD
+[0.13.0]: https://github.com/VilovietaSEO/thorbit-sdk/compare/v0.10.1...python-v0.13.0
