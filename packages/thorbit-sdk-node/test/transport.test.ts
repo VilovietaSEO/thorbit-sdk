@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { z } from 'zod'
 
-import { SendThorbitHttpToolCall } from '../src/SendThorbitHttpToolCall'
+import { SendThorbitHttpToolCall, ThorbitRequestValidationError } from '../src/SendThorbitHttpToolCall'
 import { THORBIT_ACCOUNT_BILLING_GET_PLAN_OUTPUT_SCHEMA, CallThorbitTools, THORBIT_MCP_INPUT_LIMITS } from '../src/index'
 
 const outputSchema = z
@@ -101,5 +101,21 @@ describe('input bounds before effects', () => {
     const oversized = { values: 'x'.repeat(THORBIT_MCP_INPUT_LIMITS.maxBytes + 1) }
     expect(() => client.callTool('thorbit_account_projects_list', oversized, z.any())).toThrow('maxBytes')
     expect(transport.callTool).not.toHaveBeenCalled()
+  })
+})
+
+
+describe('published HTTP serialization semantics', () => {
+  it('rejects undefined before any HTTP call', async () => {
+    const fetchImplementation = vi.fn() as unknown as typeof fetch
+    const transport = new SendThorbitHttpToolCall({ apiKey: 'fixture' }, fetchImplementation)
+    await expect(transport.callTool('thorbit_account_projects_list', undefined, z.any())).rejects.toBeInstanceOf(ThorbitRequestValidationError)
+    expect(fetchImplementation).not.toHaveBeenCalled()
+  })
+  it('preserves explicit JSON null for server validation instead of substituting an empty object', async () => {
+    const fetchImplementation = vi.fn(async () => Response.json({ accepted: true })) as unknown as typeof fetch
+    const transport = new SendThorbitHttpToolCall({ apiKey: 'fixture' }, fetchImplementation)
+    await transport.callTool('thorbit_account_projects_list', null, z.any())
+    expect(fetchImplementation).toHaveBeenCalledWith(expect.any(String), expect.objectContaining({ body: 'null' }))
   })
 })

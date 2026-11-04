@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.13.1] - 2026-11-04
+
+### Fixed
+
+- Use the Node SDK serialization compatibility patch; CLI tool schemas and commands remain unchanged.
+
 ## [0.13.0] - 2026-11-04
 
 ### Changed
@@ -11,5 +17,7 @@
 - Omit source maps from public npm archives.
 
 
-[Unreleased]: https://github.com/VilovietaSEO/thorbit-sdk/compare/cli-v0.13.0...HEAD
+[Unreleased]: https://github.com/VilovietaSEO/thorbit-sdk/compare/cli-v0.13.1...HEAD
 [0.13.0]: https://github.com/VilovietaSEO/thorbit-sdk/compare/v0.10.1...cli-v0.13.0
+
+[0.13.1]: https://github.com/VilovietaSEO/thorbit-sdk/compare/cli-v0.13.0...cli-v0.13.1

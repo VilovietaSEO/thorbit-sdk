@@ -1,4 +1,4 @@
-import { serializeThorbitMcpInput } from './input-limits.js'
+import { assertThorbitMcpInput } from './input-limits.js'
 import type { z } from 'zod'
 
 import type { IThorbitClientTransport } from './IThorbitClientTransport'
@@ -145,7 +145,8 @@ export class SendThorbitHttpToolCall implements IThorbitClientTransport {
     let requestBody: string | undefined
     try {
       encodedToolName = encodeURIComponent(toolName)
-      requestBody = serializeThorbitMcpInput(input)
+      assertThorbitMcpInput(input)
+      requestBody = JSON.stringify(input)
     } catch (error) {
       throw new ThorbitRequestValidationError(
         'Thorbit tool input could not be serialized as JSON',
