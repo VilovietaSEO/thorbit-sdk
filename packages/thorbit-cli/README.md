@@ -53,6 +53,6 @@ audit behavior as the web admin. The generic command refuses paths outside
 
 MIT
 
-## Release 0.11.0
+## Release 0.13.0
 
 Bindings cover the current 148-tool Thorbit contract. Node SDK and CLI schemas require Zod 4; Python retains Pydantic 2. Existing per-tool batch limits are preserved. Standard Node requests use the MCP SDK's existing 10 MiB transport allowance, and hosted providers may impose a lower body limit. See the [package changelog](https://github.com/VilovietaSEO/thorbit-sdk/blob/main/packages/thorbit-cli/CHANGELOG.md) and [migration notes](https://github.com/VilovietaSEO/thorbit-sdk/blob/main/docs/zod4-migration.md).
