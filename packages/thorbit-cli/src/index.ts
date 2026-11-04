@@ -6,6 +6,7 @@ import packageManifest from "../package.json";
 import { Command, CommanderError } from "commander";
 import {
   CallThorbitTools,
+  assertThorbitMcpInput,
   THORBIT_GENERATED_TOOLS,
   ThorbitHttpError,
   ThorbitRequestValidationError,
@@ -76,6 +77,7 @@ export async function call(
   rawInvocation: ThorbitCliInvocationInput,
   dependencies: CallThorbitCliDependencies = {},
 ): Promise<unknown> {
+  assertThorbitMcpInput(rawInvocation);
   const invocation = ThorbitCliInvocationSchema.parse(rawInvocation);
   const runtime = THORBIT_CLI_TOOL_RUNTIME_BY_NAME.get(invocation.toolName);
   if (!runtime) {

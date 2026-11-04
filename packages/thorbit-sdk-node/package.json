@@ -1,6 +1,6 @@
 {
   "name": "thorbit-sdk",
-  "version": "0.10.1",
+  "version": "0.11.0",
   "description": "Typed Node.js client for the Thorbit API",
   "license": "MIT",
   "homepage": "https://github.com/VilovietaSEO/thorbit-sdk#readme",
@@ -27,7 +27,8 @@
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "publishConfig": {
     "access": "public"
@@ -39,7 +40,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "zod": "^3.23.0"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

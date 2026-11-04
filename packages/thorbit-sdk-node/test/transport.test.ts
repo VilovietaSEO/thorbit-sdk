@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { z } from 'zod'
 
 import { SendThorbitHttpToolCall } from '../src/SendThorbitHttpToolCall'
-import { THORBIT_ACCOUNT_BILLING_GET_PLAN_OUTPUT_SCHEMA } from '../src/index'
+import { THORBIT_ACCOUNT_BILLING_GET_PLAN_OUTPUT_SCHEMA, CallThorbitTools, THORBIT_MCP_INPUT_LIMITS } from '../src/index'
 
 const outputSchema = z
   .object({
@@ -83,5 +83,23 @@ describe('generated Account billing schema', () => {
         result: { ...output.result, usage: { ['x'.repeat(81)]: 4 } },
       }).success,
     ).toBe(false)
+  })
+})
+
+
+describe('input bounds before effects', () => {
+  it('rejects oversized direct HTTP input before fetch', async () => {
+    const fetchImplementation = vi.fn() as unknown as typeof fetch
+    const transport = new SendThorbitHttpToolCall({ apiKey: 'fixture' }, fetchImplementation)
+    await expect(transport.callTool('thorbit_account_projects_list', { values: 'x'.repeat(THORBIT_MCP_INPUT_LIMITS.maxBytes + 1) }, z.any())).rejects.toThrow('could not be serialized')
+    expect(fetchImplementation).not.toHaveBeenCalled()
+  })
+
+  it('rejects generic and generated input before the injected transport', async () => {
+    const transport = { callTool: vi.fn() }
+    const client = new CallThorbitTools(transport)
+    const oversized = { values: 'x'.repeat(THORBIT_MCP_INPUT_LIMITS.maxBytes + 1) }
+    expect(() => client.callTool('thorbit_account_projects_list', oversized, z.any())).toThrow('maxBytes')
+    expect(transport.callTool).not.toHaveBeenCalled()
   })
 })
