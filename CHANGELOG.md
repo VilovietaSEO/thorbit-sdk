@@ -4,6 +4,12 @@ All notable changes to the public Thorbit SDK source are documented here.
 
 ## [Unreleased]
 
+## [0.13.1] - 2026-11-04
+
+### Fixed
+
+- Preserve the Node HTTP transport's original null/undefined behavior and update the CLI dependency. Python remains at 0.13.0.
+
 ## [0.13.0] - 2026-11-04
 
 ### Changed
@@ -65,9 +71,11 @@ All notable changes to the public Thorbit SDK source are documented here.
 - Correct stale Money Keyword and Topic Map descriptions, input caps, and
   examples in generated clients and cURL documentation.
 
-[Unreleased]: https://github.com/VilovietaSEO/thorbit-sdk/compare/v0.13.0...HEAD
+[Unreleased]: https://github.com/VilovietaSEO/thorbit-sdk/compare/v0.13.1...HEAD
 [0.10.1]: https://github.com/VilovietaSEO/thorbit-sdk/compare/v0.5.0...v0.10.1
 [0.5.0]: https://github.com/VilovietaSEO/thorbit-sdk/compare/v0.4.0...v0.5.0
 [0.2.0]: https://github.com/VilovietaSEO/thorbit-sdk/compare/v0.1.0...v0.2.0
 
 [0.13.0]: https://github.com/VilovietaSEO/thorbit-sdk/compare/v0.10.1...v0.13.0
+
+[0.13.1]: https://github.com/VilovietaSEO/thorbit-sdk/compare/v0.13.0...v0.13.1
